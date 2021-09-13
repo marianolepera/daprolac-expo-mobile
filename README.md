@@ -16,3 +16,5 @@ escanear codigo de barra con la aplicacion expo go del celular para correr la ap
 -yarn start
 
 -abrir en un emulador la aplicacion
+
+FALTAN VALIDACIONES DE DATOS Y DESACTIVAR LOS WARNINGS
