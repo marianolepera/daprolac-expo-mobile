@@ -7,8 +7,9 @@ yarn install
 
 yarn start
 
-escanear codigo de barra con la aplicacion expo go del celular para correr la app
+-Escanear codigo de barra con la aplicacion expo go del celular para correr la app y funciona
 
+# Otro metodo
 -Descargar android studio y bajar un emulador.
 
 -yarn install
