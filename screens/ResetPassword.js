@@ -11,15 +11,6 @@ import Button from '../components/Button'
 export default function ResetPasswordScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
 
-//   const sendResetPasswordEmail = () => {
-//     const emailError = emailValidator(email.value)
-//     if (emailError) {
-//       setEmail({ ...email, error: emailError })
-//       return
-//     }
-//     navigation.navigate('LoginScreen')
-//   }
-
   return (
     <BackGround>
       <BackButton goBack={navigation.goBack} />
@@ -37,7 +28,7 @@ export default function ResetPasswordScreen({ navigation }) {
         autoCompleteType="email"
         textContentType="emailAddress"
         keyboardType="email-address"
-        description="You will receive email with password reset link."
+        description="recibiras un link con la contraseña nueva"
       />
       <Button
         mode="contained"

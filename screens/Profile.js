@@ -20,25 +20,6 @@ const ProfileScreen =({route}) =>{
     const [user,setUser] =useState("")
     const [isLoading,setIsLoading] = useState(true)
     console.log(route.params.id);
-
-
-    // const getData = async() =>{
-    //     try{
-    //         let valueUser = JSON.parse(await AsyncStorage.getItem('user'));  
-            
-    //         setUser(valueUser) 
-    //     }
-    //     catch(error){
-    //         console.log(error)
-    //         alert(error)
-    //     }
-
-    // }
-    // useEffect(() =>{
-    //     getData();
-    //     //alert("entre aqui")
-    // },[]);
-    //console.log("ROUTE EN PROFILE SCREEN",route.params.id);
     const getData = async() =>{
       const id=route.params.id
       try{
@@ -128,12 +109,7 @@ const ProfileScreen =({route}) =>{
                   apellido:usuario.apellido,
                   id:usuario.id
                 })}
-                //onPress={() => navigation.navigate('EditProfileScreen',{ nombre: 'jane' })}
-                // onPress={() => {
-                //   this.props.navigation.navigate('editarPerfilScreen', {
-                //     EditarPerfil: usuario,
-                //   });
-                // }}
+                
                 >
                 Editar Perfil
               </Button>

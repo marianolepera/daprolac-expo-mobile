@@ -13,7 +13,7 @@ const HomeScreen =({route,id} ) =>{
     return (
         <View>
             <Text style={{textAlign:'center', marginTop:10,color:colors.text}} h4>
-                Bienvenido {id ? id : "mariano" }!
+                Bienvenido {id ? id : "adrian" }!
             </Text>
             <Text style={{textAlign:'center',marginTop:10,fontSize:20,fontWeight:'bold',color:colors.text}}>
                 Consulta si tienes tareas por realizar!

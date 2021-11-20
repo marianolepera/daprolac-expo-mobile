@@ -20,37 +20,7 @@ import {parseISO} from 'date-fns';
 import { useTheme } from 'react-native-paper';
 import axios from 'axios';
 
-//LogBox.ignoreLogs(['Warning: ...']); 
-// const EjerciciosStackNavigator = createStackNavigator(
-//     {
-//       EjerciciosScreen: {
-//         screen: EjerciciosScreen,
-//         navigationOptions: ({ navigation }) => {
-//           return {
-//             headerLeft: () => (
-//               <Icon
-//                 style={{ paddingLeft: 10, color: azulPrincipal }}
-//                 onPress={() => navigation.openDrawer()}
-//                 name="md-menu"
-//                 size={wp(6.6)}
-//               />
-//             ),
-//           }
-//         }
-//       },
-//       Musculo: { screen: MusculoScreen },
-//       EjerciciosNew: { screen: EjerciciosNewScreen },
-//       EjercicioEspecificoM: { screen: EjerciciosEspecificoMScreen },
-//       EjercicioEspecificoNoM: { screen: EjerciciosEspecificoNoMScreen },
-//       EjercicioModificable: { screen: EjercicioModificableScreen },
-//       MusculoAgregar: { screen: MusculoAgregarScreen },
-//     },
-//     {
-//       initialRouteName: 'EjerciciosScreen',
-//     }
-//   );
-
-
+LogBox.ignoreLogs(['Warning: each...']); 
 
 const TasksScreen =({route,navigation}) =>{
     console.log("TASKS ID:",route.params.id);
@@ -104,6 +74,7 @@ const TasksScreen =({route,navigation}) =>{
             if (tarea.idUsuario == id) {
               orden.proceso.tareas.map(t => {
                 if (tarea.idTarea == t.id && tarea.fechaFin == null) {
+                  
                   tareaObjeto = {
                     id: t.id,
                     nombre: t.nombre,
@@ -113,6 +84,9 @@ const TasksScreen =({route,navigation}) =>{
                     fechaInicia: tarea.fechaInicia,
                     fechaFin: tarea.fechaFin,
                     fechaIniciaProp: tarea.fechaIniciaProp,
+                    diasAntecesora:t.proceso_tarea.diasAntecesora,
+                    horasAntecesora:t.proceso_tarea.horasAntecesora,
+                    minutosAntecesora:t.proceso_tarea.minutosAntecesora,
                     datos: t.datos,
                     datos_tareas: tarea.datos,
                   };

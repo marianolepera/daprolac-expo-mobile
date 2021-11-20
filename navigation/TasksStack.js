@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import finishTasksStackHeader from './FinishTaskStack';
 import FinishTasksScreen from '../screens/FinishTasks';
-
 const TasksStack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 

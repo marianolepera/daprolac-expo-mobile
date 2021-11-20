@@ -15,25 +15,7 @@ const EditProfileScreen = ({route,navigation}) =>{
     //let usuario = route.params 
     const [clave,setClave] =useState("");
     const id =useState(route.params ? route.params.id : "");
-
-    //const [user,setUser] =useState("")
     console.log(route);
-
-    // const getData = async() =>{
-    //     try{
-    //         let valueUser = JSON.parse(await AsyncStorage.getItem('user'));  
-            
-    //         setUser(valueUser) 
-    //     }
-    //     catch(error){
-    //         console.log(error)
-    //         alert(error)
-    //     }
-
-    // }
-    // useEffect(() =>{
-    //     getData();
-    // },[]);
     
   const {colors} = useTheme();
     

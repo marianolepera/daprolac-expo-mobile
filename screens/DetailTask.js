@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import {View, StyleSheet, ScrollView,Alert} from 'react-native';
+import {View, StyleSheet, ScrollView,Alert,Picker} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Text} from 'react-native-elements';
 import Button from '../components/Button';
@@ -8,12 +8,12 @@ import moment from 'moment';
 import axios from 'axios';
 import Loader from "../components/Loader"
 import { useTheme } from 'react-native-paper';
+//import {Picker} from '@react-native-picker/picker';
 
 const DetailTaskScreen = ({route,navigation}) =>{
     // console.log("DETALLE TAREA:",route.params.DetalleTarea)
     // console.log("DETALLE ITEM:",route.params.tarea)
     // console.log("DETALLE ID:",route.params.id)
-
     const [editVisibles,setEditVisibles]=useState({})
     const fechaInicia = moment().format('YYYY-MM-DD, h:mm:ss a')
     //const fechaInicia = null
@@ -27,6 +27,8 @@ const DetailTaskScreen = ({route,navigation}) =>{
     let [inputDisabled,setInputDisabled] =useState(orden.fechaInicia == null ?  true :false )
     let tareaDisabled=false
     const {colors} = useTheme();
+    let isValidDatoNumerico=false
+    
     
 
     const showEditDiv = (id) => {
@@ -38,7 +40,10 @@ const DetailTaskScreen = ({route,navigation}) =>{
 
       const  iniciarTarea = (idOrden, idTarea, idUsuario) =>{
         var ordenNueva = orden;
+        console.log("ORDEN NUEVA:", ordenNueva)
         ordenNueva.fechaInicia = fechaInicia;
+        console.log(ordenNueva.fechaInicia)
+        
         
         const orden_Inicial = {
           tareas: [
@@ -56,7 +61,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
             orden_Inicial,
           )
           .then(res => {
-            console.log(res);
+            //console.log(res);
             console.log(res.data);
             setOrden(ordenNueva)
             setLoading(false)
@@ -69,10 +74,12 @@ const DetailTaskScreen = ({route,navigation}) =>{
             alert('hubo un error');
           });
     
-        console.log(orden_Inicial);
+        console.log("ORDEN_INICIAL: ",orden_Inicial);
       }
 
-      const completarValor = (index, idTarea, idOrden, idUsuario, idDato) =>{
+      const completarValor = (index, idTarea, idOrden, idUsuario, idDato,datoMinimo,datoMaximo) =>{
+        console.log(datoMinimo)
+        console.log(datoMaximo)
         var ordenNueva = orden;
         ordenNueva.datos_tareas[index].valor = valor;
         const ordenValor = {
@@ -89,6 +96,15 @@ const DetailTaskScreen = ({route,navigation}) =>{
             },
           ],
         };
+        if(datoMaximo !=0 || datoMinimo !=0 ){
+          if(valor < datoMinimo || valor > datoMaximo){
+            return (
+              Alert.alert("el dato no puede ser menor o mayor al rango permitido")
+              //isValidDatoNumerico=false
+            )
+          }
+        }
+        console.log("orden nueva:", valor )
         axios
           .put(
             'https://daprolac.herokuapp.com/api/v1/ordenes/' + idOrden + '?eager=1',
@@ -256,6 +272,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
               }}
               key={index}>
               {orden.datos.map((dato, i) => (
+                
                 <View key={i}>
                   {dt.idDato == dato.id ? (
                     <View>
@@ -354,29 +371,78 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                   autoCapitalize="none"
                                   keyboardType="numeric"
                                 />
-                              ) : (
-                                <TextInput
-                                  style={{
-                                    width: '60%',
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    marginLeft: '20%',
-                                  }}
-                                  label="Ingrese valor"
-                                  returnKeyType="next"
-                                  error={false}
-                                  errorText={''}
-                                  disabled={inputDisabled}
-                                  // disabled={bloquearInput(
-                                  //   orden.fechaInicia,
-                                  // )}
-                                  onChangeText={valor =>
-                                    setValor(valor)
-                                  }
-                                  value={valor}
-                                  autoCapitalize="none"
-                                />
-                              )}
+                              ) : null
+                              // (
+                              //   <TextInput
+                              //     style={{
+                              //       width: '60%',
+                              //       textAlign: 'center',
+                              //       justifyContent: 'center',
+                              //       marginLeft: '20%',
+                              //     }}
+                              //     label="Ingrese valor"
+                              //     returnKeyType="next"
+                              //     error={false}
+                              //     errorText={''}
+                              //     disabled={inputDisabled}
+                              //     // disabled={bloquearInput(
+                              //     //   orden.fechaInicia,
+                              //     // )}
+                              //     onChangeText={valor =>
+                              //       setValor(valor)
+                              //     }
+                              //     value={valor}
+                              //     autoCapitalize="none"
+                              //   />
+                              // )
+                              }
+
+                              { dato.tipo =="opcion" ? (
+                                <View style={{marginBottom:5}}>
+                                  
+                                  <Picker
+                                    style={{ flex:1,marginLeft:"20%",alignItems:'center',justifyContent:'center',height: 40, width: "50%" }}
+                                    selectedValue={valor}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      setValor(itemValue)
+                                    }>
+                                       {dato.opciones.map((opcion,indexOpcion) =>(
+                                          <Picker.Item key={indexOpcion} label={opcion.valor} value={opcion.valor} />
+                                      ))} 
+                                    
+                                </Picker>
+                                </View>
+                              ) :(
+                                null
+                              )
+                              }
+
+                              { dato.tipo =="cadena" ? (
+                                    <TextInput
+                                    style={{
+                                      width: '60%',
+                                      textAlign: 'center',
+                                      justifyContent: 'center',
+                                      marginLeft: '20%',
+                                    }}
+                                    label="Ingrese valor"
+                                    returnKeyType="next"
+                                    error={false}
+                                    errorText={''}
+                                    disabled={inputDisabled}
+                                    // disabled={bloquearInput(
+                                    //   orden.fechaInicia,
+                                    // )}
+                                    onChangeText={valor =>
+                                      setValor(valor)
+                                    }
+                                    value={valor}
+                                    autoCapitalize="none"
+                                  />
+                              ) :(
+                                null
+                              )
+                              }
 
                               <View style={{flex: 1, flexDirection: 'row'}}>
                                 <Button
@@ -395,6 +461,8 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                       orden.idOrden,
                                       idUsuario,
                                       dato.id,
+                                      dato.minimo,
+                                      dato.maximo
                                     )
                                   }>
                                   Ingresar
