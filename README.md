@@ -18,4 +18,4 @@ yarn start
 
 -abrir en un emulador la aplicacion
 
-FALTAN VALIDACIONES DE DATOS Y DESACTIVAR LOS WARNINGS
+
