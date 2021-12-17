@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState,useEffect,useCallback } from 'react';
 import { View ,Text} from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -92,6 +92,7 @@ function TopTabsNavigation({route}){
 export default function App() {
    const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
+
    const CustomDefaultTheme = {
     ...NavigationDefaultTheme,
     ...PaperDefaultTheme,
@@ -117,14 +118,31 @@ export default function App() {
 
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
-   const themeContext = React.useMemo(() => ({
+  const themeContext = React.useMemo(() => ({
     toggleTheme: () => {
       setIsDarkTheme( isDarkTheme => !isDarkTheme );
     }
-   }), []);
+  }), []);
 
-   const token=AsyncStorage.getItem("token");
-   console.log(token);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('token').then(console.log)
+      console.log("VALUE:",value)
+      return value;
+    } catch(e) {
+      // error reading value
+    }
+  }
+
+  useEffect (() =>{
+
+    getData()
+  } );
+  
+
+
+  //  const token=AsyncStorage.getItem("token");
    
   return (
     <PaperProvider theme={theme}>

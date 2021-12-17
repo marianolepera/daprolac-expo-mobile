@@ -134,13 +134,13 @@ const LoginScreen =() =>{
            setLoading(false)
           )) 
         } else {
-          //AsyncStorage.setItem("accessToken", response.data.accessToken);
+          AsyncStorage.setItem("token", response.data.payload.token);
           //AsyncStorage.setItem("user", JSON.stringify(response.data.user));
           //AsyncStorage.setItem("id", JSON.stringify(response.data.payload.id));
-          //console.log("token: ",response.data.accessToken);
+          //console.log("token: ",response.data.payload.token);
           //console.log("user: ",response.data.user);
-          //console.log("id: ",response.data.user.id);
-          //Alert.alert(AsyncStorage.getItem("accessToken"));
+          AsyncStorage.getItem("token").then(console.log("token recibido"));
+          //Alert.alert(AsyncStorage.getItem("token"));
           setLoading(false)
           navigation.replace('Drawer',{id:response.data.payload.id})
         }

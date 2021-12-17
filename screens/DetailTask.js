@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import {View, StyleSheet, ScrollView,Alert,Picker} from 'react-native';
+import {View, StyleSheet, ScrollView,Alert,Picker,LogBox} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Text} from 'react-native-elements';
 import Button from '../components/Button';
@@ -8,6 +8,9 @@ import moment from 'moment';
 import axios from 'axios';
 import Loader from "../components/Loader"
 import { useTheme } from 'react-native-paper';
+import format from 'date-fns/format';
+import {parseISO} from 'date-fns';
+LogBox.ignoreAllLogs();
 //import {Picker} from '@react-native-picker/picker';
 
 const DetailTaskScreen = ({route,navigation}) =>{
@@ -24,7 +27,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
     const [ordenTareaAnterior, setTareaAnterior]= useState(route.params.tarea)
     const idUsuario=route.params.id
     let [disabled,setdisabled] =useState(orden.fechaInicia != null ?  true :false )
-    let [inputDisabled,setInputDisabled] =useState(orden.fechaInicia == null ?  true :false )
+    //let [inputDisabled,setInputDisabled] =useState(orden.fechaInicia == null ?  true :false )
     let tareaDisabled=false
     const {colors} = useTheme();
     let isValidDatoNumerico=false
@@ -96,14 +99,14 @@ const DetailTaskScreen = ({route,navigation}) =>{
             },
           ],
         };
-        if(datoMaximo !=0 || datoMinimo !=0 ){
-          if(valor < datoMinimo || valor > datoMaximo){
-            return (
-              Alert.alert("el dato no puede ser menor o mayor al rango permitido")
-              //isValidDatoNumerico=false
-            )
-          }
-        }
+        // if(datoMaximo !=0 || datoMinimo !=0 ){
+        //   if(valor < datoMinimo || valor > datoMaximo){
+        //     return (
+        //       Alert.alert("el dato no puede ser menor o mayor al rango permitido")
+        //       //isValidDatoNumerico=false
+        //     )
+        //   }
+        // }
         console.log("orden nueva:", valor )
         axios
           .put(
@@ -138,8 +141,8 @@ const DetailTaskScreen = ({route,navigation}) =>{
         }
       }
 
-      const bloquearInput = (fechaInicia) =>{
-        if (fechaInicia == null) {
+      const bloquearInput = () =>{
+        if (orden.fechaInicia == null) {
           console.log('desactive el input');
           return (disabled=true);
         } else {
@@ -363,7 +366,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                   // disabled={bloquearInput(
                                   //   orden.fechaInicia,
                                   // )}
-                                  disabled={inputDisabled}
+                                  disabled={bloquearInput()}
                                   onChangeText={valor =>
                                     setValor(valor)
                                   }
@@ -429,7 +432,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                     returnKeyType="next"
                                     error={false}
                                     errorText={''}
-                                    disabled={inputDisabled}
+                                    disabled={bloquearInput()}
                                     // disabled={bloquearInput(
                                     //   orden.fechaInicia,
                                     // )}
@@ -496,9 +499,26 @@ const DetailTaskScreen = ({route,navigation}) =>{
                   ) : null}
                 </View>
               ))}
+              
             </View>
           ))}
 
+          {/* {orden.fechaInicia!=null && orden.fechaFin !=null ? 
+            <View>
+            <Text style={{
+                textAlign: 'center',marginTop:10,
+                color: colors.text}} h4>
+                Fecha fin de tarea:
+              </Text>
+              <Text style={{
+                textAlign: 'center',
+                color: colors.text}} h4>
+                {format(parseISO(orden.fechaFin), 'dd/MM/yyyy kk:mm:ss')}
+              </Text>
+            </View>
+          : 
+          null} */}
+          
           {orden.datos_tareas.map(dt => (
             <View>
               {orden.datos.map(dato => (

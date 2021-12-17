@@ -21,6 +21,7 @@ import { useTheme } from 'react-native-paper';
 import axios from 'axios';
 
 LogBox.ignoreLogs(['Warning: each...']); 
+LogBox.ignoreAllLogs();
 
 const TasksScreen =({route,navigation}) =>{
     console.log("TASKS ID:",route.params.id);
