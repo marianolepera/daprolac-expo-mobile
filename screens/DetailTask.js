@@ -209,6 +209,41 @@ const DetailTaskScreen = ({route,navigation}) =>{
           });
     
         console.log(orden_Final);
+
+        console.log(ordenNueva.tareas.length)
+       
+        var ordenNuevaLength = ordenNueva.tareas.length;
+
+        let lastElement = ordenNueva.tareas[ordenNuevaLength - 1];
+
+        console.log("id orden",idOrden)
+        console.log(lastElement.idTarea);
+        if(lastElement.idTarea === idTarea){
+            const ordenFinalizada = {
+                finalizada: true
+              };
+              axios
+              .put(
+                'https://daprolac.herokuapp.com/api/v1/ordenes/' + idOrden + '?eager=1',
+                ordenFinalizada,
+              )
+              .then(res => {
+                console.log(res);
+                console.log(res.data);
+                setOrden(ordenNueva)
+                setLoading(false)
+              })
+              .catch(error => {
+                console.log(error.response);
+                setLoading(false)
+              });
+            console.log("es el ultimo elemento del array")
+        }
+
+
+
+             
+          
       }
 
     return(

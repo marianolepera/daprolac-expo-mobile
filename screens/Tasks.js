@@ -90,6 +90,7 @@ const TasksScreen =({route,navigation}) =>{
                     minutosAntecesora:t.proceso_tarea.minutosAntecesora,
                     datos: t.datos,
                     datos_tareas: tarea.datos,
+                    tareas:orden.tareas
                   };
                   ordenesById.push(tareaObjeto);
                 }
