@@ -80,9 +80,19 @@ const DetailTaskScreen = ({route,navigation}) =>{
         console.log("ORDEN_INICIAL: ",orden_Inicial);
       }
 
-      const completarValor = (index, idTarea, idOrden, idUsuario, idDato,datoMinimo,datoMaximo) =>{
-        console.log(datoMinimo)
-        console.log(datoMaximo)
+      const completarValor = (index, idTarea, idOrden, idUsuario, idDato,dato) =>{
+        console.log(dato.accionCorrectiva)
+        //console.log(parseFloat(dato.minimo).toFixed(2))
+        
+        const minimo=parseFloat(dato.minimo)
+        const maximo=parseFloat(dato.maximo)
+        if (valor > maximo || valor < minimo){
+          setValor(0)
+          return(
+            alert(dato.accionCorrectiva)
+          )
+        }
+  
         var ordenNueva = orden;
         ordenNueva.datos_tareas[index].valor = valor;
         const ordenValor = {
@@ -99,25 +109,18 @@ const DetailTaskScreen = ({route,navigation}) =>{
             },
           ],
         };
-        // if(datoMaximo !=0 || datoMinimo !=0 ){
-        //   if(valor < datoMinimo || valor > datoMaximo){
-        //     return (
-        //       Alert.alert("el dato no puede ser menor o mayor al rango permitido")
-        //       //isValidDatoNumerico=false
-        //     )
-        //   }
-        // }
-        console.log("orden nueva:", valor )
+ 
         axios
           .put(
             'https://daprolac.herokuapp.com/api/v1/ordenes/' + idOrden + '?eager=1',
             ordenValor,
           )
           .then(res => {
-            console.log(res);
-            console.log(res.data);
+            // console.log(res);
+            // console.log(res.data);
             setOrden(ordenNueva);
             setLoading(false)
+            setValor(0)
             //setInputDisabled(false)
             showEditDiv(idDato)
             alert('se completo el valor');
@@ -125,9 +128,11 @@ const DetailTaskScreen = ({route,navigation}) =>{
           .catch(error => {
             console.log(error.response);
             setLoading(false);
+            setValor(0)
             alert('hubo un error');
           });
-        console.log(ordenValor);
+        // console.log(ordenValor);
+
       }
 
 
@@ -402,10 +407,10 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                   //   orden.fechaInicia,
                                   // )}
                                   disabled={bloquearInput()}
-                                  onChangeText={valor =>
-                                    setValor(valor)
+                                  onChangeText={nexText =>
+                                    setValor(nexText)
                                   }
-                                  value={valor}
+                                  defaultValue={valor}
                                   autoCapitalize="none"
                                   keyboardType="numeric"
                                 />
@@ -499,8 +504,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                       orden.idOrden,
                                       idUsuario,
                                       dato.id,
-                                      dato.minimo,
-                                      dato.maximo
+                                      dato
                                     )
                                   }>
                                   Ingresar
