@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const HomeStack = createStackNavigator();
 
 const HomeStackHeader = ({route,navigation}) => {
-  console.log("HOME STACK HEADER",route.params)
+  // console.log("HOME STACK HEADER",route.params)
   return (
     <HomeStack.Navigator
     screenOptions={{

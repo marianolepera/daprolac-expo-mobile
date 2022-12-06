@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const ProfileStack = createStackNavigator();
 
 const ProfileStackHeader = ({route,navigation} ) => {
-  console.log("profile header id:",route.params.id);
+  //console.log("profile header id:",route.params.id);
   return (
     <ProfileStack.Navigator
     screenOptions={{

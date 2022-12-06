@@ -24,7 +24,7 @@ LogBox.ignoreLogs(['Warning: each...']);
 LogBox.ignoreAllLogs();
 
 const TasksScreen =({route,navigation}) =>{
-    console.log("TASKS ID:",route.params.id);
+    //console.log("TASKS ID:",route.params.id);
     const id= route.params.id
     const [loading,setLoading] = useState(true);
     const [arrayholder,setArrayHolder] = useState([])
@@ -79,6 +79,7 @@ const TasksScreen =({route,navigation}) =>{
                   tareaObjeto = {
                     id: t.id,
                     nombre: t.nombre,
+                    idTarea:tarea.id,
                     idOrden: orden.id,
                     proceso_tarea: t.proceso_tarea,
                     observaciones: t.observaciones,
@@ -121,7 +122,6 @@ const TasksScreen =({route,navigation}) =>{
         // item.datos.map(dato => {
         //   console.log(dato.nombre);
         // });
-    
         return (
           <TouchableOpacity
             onPress={() => {
@@ -158,7 +158,7 @@ const TasksScreen =({route,navigation}) =>{
                 </ListItem.Title>
                 <ListItem.Subtitle>
                   fecha:
-                  {format(parseISO(item.fechaIniciaProp), 'dd/MM/yyyy kk:mm:ss')}
+                  {format(parseISO(item?.fechaIniciaProp), 'dd/MM/yyyy kk:mm:ss')}
                 </ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -166,7 +166,7 @@ const TasksScreen =({route,navigation}) =>{
           </TouchableOpacity>
         );
       }
-      console.log("data: ",dataOrdenes[4])
+      //console.log("data: ",dataOrdenes[4])
     if (loading) {
         return (
           <View style={{paddingTop: 100}}>

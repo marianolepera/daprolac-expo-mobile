@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import {View, StyleSheet, ScrollView,Alert,Picker,LogBox} from 'react-native';
+import {View, StyleSheet, ScrollView,Alert,LogBox} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Text} from 'react-native-elements';
 import Button from '../components/Button';
@@ -10,8 +10,11 @@ import Loader from "../components/Loader"
 import { useTheme } from 'react-native-paper';
 import format from 'date-fns/format';
 import {parseISO} from 'date-fns';
+// import {Picker} from '@react-native-picker/picker';
+// import RNPickerSelect from "react-native-picker-select";
+import DropDownPicker from 'react-native-dropdown-picker';
 LogBox.ignoreAllLogs();
-//import {Picker} from '@react-native-picker/picker';
+
 
 const DetailTaskScreen = ({route,navigation}) =>{
     // console.log("DETALLE TAREA:",route.params.DetalleTarea)
@@ -29,8 +32,28 @@ const DetailTaskScreen = ({route,navigation}) =>{
     let [disabled,setdisabled] =useState(orden.fechaInicia != null ?  true :false )
     //let [inputDisabled,setInputDisabled] =useState(orden.fechaInicia == null ?  true :false )
     let tareaDisabled=false
+    let datoDisabled = false
     const {colors} = useTheme();
     let isValidDatoNumerico=false
+
+    let datosPickerArray=[] 
+      let datosPickerObject={}
+      orden.datos.map( dato =>{
+          dato.opciones.map(opcion =>{
+            if( dato.id == opcion.idDato ){
+              datosPickerObject={
+                label: opcion.valor,
+                value: opcion.valor
+              }
+              datosPickerArray.push(datosPickerObject)
+            }
+            
+          })
+          
+
+      })
+    const [items, setItems] = useState([datosPickerArray]);
+    const [open, setOpen] = useState(false);
     
     
 
@@ -43,9 +66,9 @@ const DetailTaskScreen = ({route,navigation}) =>{
 
       const  iniciarTarea = (idOrden, idTarea, idUsuario) =>{
         var ordenNueva = orden;
-        console.log("ORDEN NUEVA:", ordenNueva)
+        //console.log("ORDEN NUEVA:", ordenNueva)
         ordenNueva.fechaInicia = fechaInicia;
-        console.log(ordenNueva.fechaInicia)
+        //console.log(ordenNueva.fechaInicia)
         
         
         const orden_Inicial = {
@@ -65,7 +88,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
           )
           .then(res => {
             //console.log(res);
-            console.log(res.data);
+            //console.log(res.data);
             setOrden(ordenNueva)
             setLoading(false)
             setdisabled(true);
@@ -77,21 +100,34 @@ const DetailTaskScreen = ({route,navigation}) =>{
             alert('hubo un error');
           });
     
-        console.log("ORDEN_INICIAL: ",orden_Inicial);
+        //console.log("ORDEN_INICIAL: ",orden_Inicial);
       }
 
       const completarValor = (index, idTarea, idOrden, idUsuario, idDato,dato) =>{
-        console.log(dato.accionCorrectiva)
+        //console.log(dato.accionCorrectiva)
         //console.log(parseFloat(dato.minimo).toFixed(2))
         
         const minimo=parseFloat(dato.minimo)
         const maximo=parseFloat(dato.maximo)
-        if (valor > maximo || valor < minimo){
-          setValor(0)
-          return(
-            alert(dato.accionCorrectiva)
-          )
+        if (dato.tipo == "numero"){
+          if (valor > maximo || valor < minimo){
+            setValor("")
+            if (dato.accionCorrectiva != null){
+              return(
+                alert(dato.accionCorrectiva)
+              )
+            }
+            else{
+              return(
+                alert('el dato ingresado debe estar entre los valores minimos y maximos permitidos')
+              )
+            }
+            
+          }
         }
+          
+        
+        
   
         var ordenNueva = orden;
         ordenNueva.datos_tareas[index].valor = valor;
@@ -120,7 +156,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
             // console.log(res.data);
             setOrden(ordenNueva);
             setLoading(false)
-            setValor(0)
+            setValor("")
             //setInputDisabled(false)
             showEditDiv(idDato)
             alert('se completo el valor');
@@ -128,7 +164,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
           .catch(error => {
             console.log(error.response);
             setLoading(false);
-            setValor(0)
+            setValor("")
             alert('hubo un error');
           });
         // console.log(ordenValor);
@@ -138,28 +174,34 @@ const DetailTaskScreen = ({route,navigation}) =>{
 
       const chequearEstado = (fechaInicia) =>{
         if (fechaInicia != null) {
-          console.log('desactive el boton');
+          //console.log('desactive el boton');
           return (disabled=true);
         } else {
-          console.log('no desactive el boton');
+          //console.log('no desactive el boton');
           return (disabled=false);
         }
       }
 
       const bloquearInput = () =>{
         if (orden.fechaInicia == null) {
-          console.log('desactive el input');
+          //console.log('desactive el input');
           return (disabled=true);
         } else {
-          console.log('active el input');
+          //console.log('active el input');
           return (disabled=false);
+        }
+      }
+
+      const chequearTareaIniciada = (fechaInicia) =>{
+        if (fechaInicia == null) {
+          return (datoDisabled = true);
         }
       }
 
       const chequearTareas = (fechaInicia, orden) => {
         var arrayDedatosincompletos = [];
         if (fechaInicia == null) {
-          console.log('desactive el boton finalizar');
+          //console.log('desactive el boton finalizar');
           return (tareaDisabled = true);
         }
         orden.datos_tareas.map(dt => {
@@ -169,7 +211,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
               dt.valor == null &&
               dato.tarea_dato.obligatorio == true
             ) {
-              console.log(dato.nombre + ' quedo sin asignar valor');
+              //console.log(dato.nombre + ' quedo sin asignar valor');
               arrayDedatosincompletos.push(dato.nombre);
             }
           });
@@ -199,8 +241,8 @@ const DetailTaskScreen = ({route,navigation}) =>{
             orden_Final,
           )
           .then(res => {
-            console.log(res);
-            console.log(res.data);
+            //console.log(res);
+            //console.log(res.data);
             setOrden(ordenNueva)
             setLoading(false)
             alert('se finalizo la tarea');
@@ -213,16 +255,16 @@ const DetailTaskScreen = ({route,navigation}) =>{
             alert('hubo un error');
           });
     
-        console.log(orden_Final);
+        //console.log(orden_Final);
 
-        console.log(ordenNueva.tareas.length)
+        //console.log(ordenNueva.tareas.length)
        
         var ordenNuevaLength = ordenNueva.tareas.length;
 
         let lastElement = ordenNueva.tareas[ordenNuevaLength - 1];
 
-        console.log("id orden",idOrden)
-        console.log(lastElement.idTarea);
+        //console.log("id orden",idOrden)
+        //console.log(lastElement.idTarea);
         if(lastElement.idTarea === idTarea){
             const ordenFinalizada = {
                 finalizada: true
@@ -233,8 +275,8 @@ const DetailTaskScreen = ({route,navigation}) =>{
                 ordenFinalizada,
               )
               .then(res => {
-                console.log(res);
-                console.log(res.data);
+                //console.log(res);
+                //console.log(res.data);
                 setOrden(ordenNueva)
                 setLoading(false)
               })
@@ -242,7 +284,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
                 console.log(error.response);
                 setLoading(false)
               });
-            console.log("es el ultimo elemento del array")
+            //console.log("es el ultimo elemento del array")
         }
 
 
@@ -251,6 +293,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
           
       }
 
+      
     return(
       <View>
       <ScrollView>
@@ -443,23 +486,59 @@ const DetailTaskScreen = ({route,navigation}) =>{
                               { dato.tipo =="opcion" ? (
                                 <View style={{marginBottom:5}}>
                                   
-                                  <Picker
+                                  {/* <Picker
                                     style={{ flex:1,marginLeft:"20%",alignItems:'center',justifyContent:'center',height: 40, width: "50%" }}
                                     selectedValue={valor}
                                     onValueChange={(itemValue, itemIndex) =>
                                       setValor(itemValue)
                                     }>
+                                      {console.log("VALOOR",valor)}
                                        {dato.opciones.map((opcion,indexOpcion) =>(
                                           <Picker.Item key={indexOpcion} label={opcion.valor} value={opcion.valor} />
                                       ))} 
                                     
-                                </Picker>
+                                </Picker> */}
+                                <View style={{
+                                    width:"85%",
+                                    marginLeft:30,
+                                  }}>
+                                    <DropDownPicker
+                                  //loading={loading}
+                                  placeholder="Seleccione una opcion"
+                                  placeholderStyle={{
+                                    color: "grey",
+                                    fontWeight: "bold"
+                                  }}
+                                  
+                                  open={open}
+                                  value={valor}
+                                  items={datosPickerArray}                             
+                                  setOpen={setOpen}
+                                  setValue={setValor}
+                                  // textStyle={{
+                                  //   fontSize: 15
+                                  // }}
+                                  // labelStyle={{
+                                  //   fontWeight: "bold"
+                                  // }}
+                                  
+                                  setItems={setItems}
+                                />
+
+                                </View>
+                                
+                                 {/* <RNPickerSelect
+                                    onValueChange={(valor) => setValor(valor)}
+                                    useNativeAndroidPickerStyle={false}
+                                    placeholder={{ label: "Select your favourite language", value: null }}
+                                    items={datosPickerArray}
+                                    //style={pickerSelectStyles}
+                                /> */}
                                 </View>
                               ) :(
                                 null
                               )
                               }
-
                               { dato.tipo =="cadena" ? (
                                     <TextInput
                                     style={{
@@ -527,6 +606,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
                                 alignSelf: 'center',
                                 width: '50%',
                               }}
+                              disabled={chequearTareaIniciada(orden.fechaInicia)}
                               mode="contained"
                               onPress={() => showEditDiv(dt.idDato)}>
                               Ingresar Valor

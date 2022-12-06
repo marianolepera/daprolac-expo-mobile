@@ -30,7 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     const navigation = useNavigation();
     const paperTheme = useTheme();
     //console.log("PROPS",props);
-    console.log("router id:",id);
+    //console.log("router id:",id);
 
     const { toggleTheme } = React.useContext(ThemeContext);
 
@@ -50,13 +50,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     // }
     const getData = async() =>{
         //const id= JSON.parse(await AsyncStorage.getItem('id'));
-        console.log("ID:", id);
+        //console.log("ID:", id);
 
         // await axios.get("http://10.0.2.2:3000/api/v1/usuarios/"+id +'?eager=1')
         await axios.get("https://daprolac.herokuapp.com/api/v1/usuarios/"+id +'?eager=1')
         .then(response=>{
          setUser(response.data.payload ? response.data.payload[0] : null);
-         console.log(response.data.payload)
+         //console.log(response.data.payload)
         }).catch(error=>{
           alert(error);
           console.log(error);
@@ -77,8 +77,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
         getData();
     },[]);
 
-    console.log("USUARIO:",user)
-    console.log("NOMBRE:",user.nombre)
+    // console.log("USUARIO:",user)
+    // console.log("NOMBRE:",user.nombre)
     
     const logOut=() =>{
         //AsyncStorage.removeItem("accessToken");

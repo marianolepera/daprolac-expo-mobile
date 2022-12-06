@@ -128,7 +128,7 @@ export default function App() {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('token').then(console.log)
-      console.log("VALUE:",value)
+      //console.log("VALUE:",value)
       return value;
     } catch(e) {
       // error reading value

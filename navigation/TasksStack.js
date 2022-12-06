@@ -52,7 +52,7 @@ function TopTabsNavigation({route}){
 }
 
 const TasksStackHeader = ({route,navigation}) => {
-  console.log("TASKASTASKHEADER:", route.params.id)
+  //console.log("TASKASTASKHEADER:", route.params.id)
   return (
     <TasksStack.Navigator
     screenOptions={{
