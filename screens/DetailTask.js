@@ -112,7 +112,7 @@ const DetailTaskScreen = ({route,navigation}) =>{
         if (dato.tipo == "numero"){
           if (valor > maximo || valor < minimo){
             setValor("")
-            if (dato.accionCorrectiva != null){
+            if (dato.accionCorrectiva){
               return(
                 alert(dato.accionCorrectiva)
               )
